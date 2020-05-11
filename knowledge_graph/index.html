@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 	<head>
 		<meta charset="utf-8">
-		<title>Wissenschaftsinstitutionen</title>
+		<title>Datasatz</title>
 		<link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
 		<script src="node_modules/vega/build/vega.min.js"></script>
 		<script src="node_modules/vega-lite/build/vega-lite.min.js"></script>
@@ -14,7 +14,6 @@
 		<script src="node_modules/jquery-csv/src/jquery.csv.min.js"></script>
 		<script src="http://dig.csail.mit.edu/2005/ajar/release/tabulator/0.7/rdf/rdfparser.js"></script>
 		<script src="node_modules/rdflib/dist/rdflib.min.js"></script>
-		<script src="js/csv2rdf.js"></script>
 		<style>
 			#project{
 				text-align: center;
@@ -30,14 +29,20 @@
 			<div class="collapse navbar-collapse" id="navbarNav">
 			  <ul class="navbar-nav">
 				<li class="nav-item active">
-				  <a class="nav-link" href="http://localhost:8080/knowledge_graph/index.html">Data<span class="sr-only">(current)</span></a>
+				  <a class="nav-link" href="http://localhost:8080/knowledge_graph/index.html">Datasatz<span class="sr-only">(current)</span></a>
 				</li>
 				<li class="nav-item">
-				  <a class="nav-link" href="http://localhost:8080/knowledge_graph/projects.html"> Only Projects</a>
+				  <a class="nav-link" href="http://localhost:8080/knowledge_graph/projects.html">Projekte</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="http://localhost:8080/knowledge_graph/organisations.html">Organisationen</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="http://localhost:8080/knowledge_graph/world_map.html">Weltkarte</a>
 				</li>
 			  </ul>
 			</div>
-		</nav>		
+		</nav>			
 		<br>
 		<div class="container">
 			<div class="row justify-content-center">

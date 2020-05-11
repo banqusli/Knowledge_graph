@@ -2,18 +2,25 @@
 <html lang="en" dir="ltr">
 	<head>
 		<meta charset="utf-8">
-		<title>Projekte</title>
+		<title>Wissenschaftsinstitutionen</title>
 		<link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-		<script src="node_modules/vega/build/vega.min.js"></script>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="">
+        <link  href="https://unpkg.com/leaflet-geosearch@latest/assets/css/leaflet.css" rel="stylesheet" />
+        <script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
+        <script src="node_modules/vega/build/vega.min.js"></script>
 		<script src="node_modules/vega-lite/build/vega-lite.min.js"></script>
 		<script src="node_modules/vega-embed/build/vega-embed.min.js"></script>
+		<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>	
 		<script src="node_modules/jquery/dist/jquery.js" type="text/javascript"></script>
 		<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jsonld/1.0.0/jsonld.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/jsonld@1.0.0/dist/jsonld.min.js"></script>
 		<script src="node_modules/jquery-csv/src/jquery.csv.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
+		<script src="https://d3js.org/d3.v3.min.js"></script>
 		<script src="http://dig.csail.mit.edu/2005/ajar/release/tabulator/0.7/rdf/rdfparser.js"></script>
 		<script src="node_modules/rdflib/dist/rdflib.min.js"></script>
+
 		<style>
 			html, body, #map {
 				width: 100%;
@@ -21,19 +28,22 @@
 				margin: 0;
 				padding: 0;
 			}
-
 			#geojson {
 				position: absolute;
 				left: 10px;
 				bottom: 10px;
 				z-index: 1000;
 			}
-
-			#project{
+            #project{
 				text-align: center;
 			}
 			span{
 				font-size: 13px;
+			}
+			#note{
+				color:brown;
+				font-size: 16px;
+				text-align: center;
 			}
 		</style>
 	</head> 
@@ -55,43 +65,12 @@
 				</li>
 			  </ul>
 			</div>
-		</nav>						
+		</nav>		
 		<br>
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-12">
-					<div class="card">
-						<div class="card-header">
-							Tree Layout
-						</div>
-						<ul class="list-group list-group-flush">
-							<li class="list-group-item">
-								<div class="container" id="project"></div>
-								<script src="js/projects.js" type="text/javascript"></script>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-		<br>
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-12">
-					<div class="card">
-						<div class="card-header">
-							Radial Tree Layout
-						</div>
-						<ul class="list-group list-group-flush">
-							<li class="list-group-item">
-								<div class="container" id="Radial"></div>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-		<br>
+		<p id="note">Auf der Karte befinden sich nur wenige Institute, sodass der Browser aufgrund des großen Datensatzes nicht abstürzt</p>
+		<div id="map"></div>
+		<script src="js/leaflet-heat.js" type="text/javascript"></script>
+		<script src="js/organsations.js" type="text/javascript"></script>
 		<footer class="page-footer font-small pt-4 bg-light">
 			<div class="container-fluid text-center text-md-left">
 			  <h5 class="text-uppercase">IMPRESSUM</h5>
