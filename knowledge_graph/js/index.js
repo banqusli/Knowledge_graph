@@ -41,7 +41,7 @@ $(function(){
                 {
                   "type": "nest",
                   "generate":true,
-                  "keys": ["graph", "object", "predicate", "subject"]
+                  "keys": ["graph", "subject", "predicate", "object"]
                 },
                 {
                   "type": "tree",
@@ -104,7 +104,7 @@ $(function(){
           "from": {"data": "tree"},
           "encode": {
             "enter": {
-              "text": {"field": "subject"},
+              "text": {"field": "object"},
               "fontSize": {"value": 9},
               "baseline": {"value": "middle"}
             },
@@ -176,7 +176,7 @@ $(function(){
             {
               "type": "nest",
               "generate":true,
-              "keys": ["graph", "object", "predicate", "subject"]
+              "keys": ["graph", "subject", "predicate", "object"]
             },
             {
               "type": "tree",
@@ -269,7 +269,7 @@ $(function(){
           "from": {"data": "tree"},
           "encode": {
             "enter": {
-              "text": {"field": "subject"},
+              "text": {"field": "object"},
               "fontSize": {"value": 9},
               "baseline": {"value": "middle"}
             },
