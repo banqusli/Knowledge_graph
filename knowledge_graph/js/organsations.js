@@ -15,7 +15,7 @@
     */
     $.ajax({
       type: 'GET',
-      url: `./js/cordis_org.csv`,
+      url: `./csv/cordis_org.csv`,
       success: function(data){
         csvJSON(data);
       },
@@ -50,7 +50,7 @@
       
       //convert address to coordinate and add them to map
       function locations(loc){
-        var query_addr = loc.slice(1, 20);
+        var query_addr = loc.slice(1, 15);
         try {
           for (let i = 0; i < query_addr.length; i++) {
             $.get(location.protocol + '//nominatim.openstreetmap.org/search?format=json&q='+ query_addr[i], function(data){ 

@@ -12,7 +12,7 @@ $(function(){
     $.ajax({
       type: 'GET',
       //to get the whole dataset change the url value to: `./js/cordis_org.csv`
-      url: `./js/cordis_copy.csv`,
+      url: `./csv/cordis_copy.csv`,
       success: function(data){
         convert_to_rdf(data);
       },
@@ -36,15 +36,15 @@ $(function(){
           let details = Data[i].split(';');
           rdf += `<dcatapop:organisation rdf:about="http://203.254.173.81:8080/ontologies/ConnectedFarmServiceOntology.owl#organisation">`;
           for(let j = 0; j < headings.length; j++) {
-            if(headings[j] == "id" || headings[j] == "ecContribution" || headings[j] == "vatNumber" ||  headings[j] == "projectRcn" || headings[j] == "projectID" || headings[j] == "contactTelephoneNumber" || headings[j] == "contactFaxNumber "){
-              rdf += `<owl:${headings[j]}><owl:${headings[j]} rdf:about="http://www.w3.org/2001/XMLSchema#integer"/></owl:${headings[j]}>`;
-            }else if(headings[j] == "contactForm" || headings[j] == "organizationUrl"){
-              rdf += `<dcat:${headings[j]}><dcat:${headings[j]} rdf:resource="http://www.w3.org/ns/dcat#URL"/></dcat:${headings[j]}>`;
-            }else if(headings[j] == "activityType"){
-              rdf += `<rdf:${headings[j]}><rdf:${headings[j]} rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#${details[j]}"/></rdf:${headings[j]}>`;
-            }else{
-              rdf += `<cfso:${headings[j]}><cfso:${headings[j]} rdf:about="http://203.254.173.81:8080/ontologies/ConnectedFarmServiceOntology.owl#type"/></cfso:${headings[j]}>`;
-            }
+              if(headings[j] == "id" || headings[j] == "ecContribution" || headings[j] == "vatNumber" ||  headings[j] == "projectRcn" || headings[j] == "projectID" || headings[j] == "contactTelephoneNumber" || headings[j] == "contactFaxNumber "){
+                rdf += `<owl:${headings[j]}><owl:${headings[j]} rdf:about="http://www.w3.org/2001/XMLSchema#${details[j]}"/>${details[j]}</owl:${headings[j]}>`;
+              }else if(headings[j] == "contactForm" || headings[j] == "organizationUrl"){
+                rdf += `<dcat:${headings[j]}><dcat:${headings[j]} rdf:resource="http://www.w3.org/ns/dcat#URL"/></dcat:${headings[j]}>`;
+              }else if(headings[j] == "activityType"){
+                rdf += `<rdf:${headings[j]}><rdf:${headings[j]} rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#${details[j]}"/></rdf:${headings[j]}>`;
+              }else{
+                rdf += `<cfso:${headings[j]}><cfso:${headings[j]} rdf:about="http://203.254.173.81:8080/ontologies/ConnectedFarmServiceOntology.owl#type"/></cfso:${headings[j]}>`;
+              }
           }
           rdf += "</dcatapop:organisation>"
         }
