@@ -6,6 +6,17 @@ $(function(){
       url: `./csv/cordis_pro_copy.csv`,
       success: function(data){
         convert_to_rdf(data);
+      },
+      error: function(e){
+        console.log(e);
+      }
+    });
+
+    $.ajax({
+      type: 'GET',
+      //to get the whole dataset change the url value to: `./js/cordis_pro_copy.csv`
+      url: `./csv/cordis_projects.csv`,
+      success: function(data){
         csvJSON(data);
       },
       error: function(e){
@@ -102,8 +113,10 @@ $(function(){
 
     function charts(data){
       let programme = [];
+      let status = [];
       $.each(data, function(key, value){
-        programme.push(value.programme) 
+        programme.push(value.programme);
+        status.push(value.status); 
       })
 
       var H2020EU132 = 0;
@@ -114,6 +127,7 @@ $(function(){
       var H2020EU356 = 0;
       var H2020EU4 = 0;
       var H2020EU214 = 0;
+      var H2020EU36 = 0, H2020EU3632 = 0, H2020EU3456 = 0;
       for(var i = 0; i < programme.length; ++i){
           if(programme[i] == "H2020-EU.1.3.2."){
             H2020EU132++;
@@ -131,12 +145,17 @@ $(function(){
             H2020EU4++
           }else if(programme[i] == "\"H2020-EU.2.1.4."){
             H2020EU214++
+          }else if(programme[i] == "H2020-EU.3.6."){
+            H2020EU36++
+          }else if(programme[i] == "H2020-EU.3.6.3.2."){
+            H2020EU3632++
+          }else if(programme[i] == "H2020-EU.3.4.5.6."){
+            H2020EU3456++
           }
-          
       }
       const spec = {
-          "width": 650,
-          "height": 200,
+          "width": 1000,
+          "height": 300,
           "padding": 5,
         
           "data": [
@@ -150,7 +169,10 @@ $(function(){
                 {"category": "H2020-EU.3.4.5.4.", "amount": H2020EU3454},
                 {"category": "H2020-EU.3.5.6.", "amount": H2020EU356},
                 {"category": "H2020-EU.4.", "amount": H2020EU4},
-                {"category": "H2020-EU.2.1.4.", "amount": H2020EU214}
+                {"category": "H2020-EU.2.1.4.", "amount": H2020EU214},
+                {"category": "H2020-EU.3.6", "amount": H2020EU36},
+                {"category": "H2020-EU.3.6.3.2.", "amount": H2020EU3632},
+                {"category": "H2020-EU.3.4.5.6.", "amount": H2020EU3456}
               ] 
             }
           ],
@@ -185,7 +207,7 @@ $(function(){
         
           "axes": [
             { "orient": "bottom", "scale": "xscale", "title": "finanzierte Programme" },
-            { "orient": "left", "scale": "yscale", "title": "Projekte" }
+            { "orient": "left", "scale": "yscale", "title": "Projekte Anzahl" }
           ],
         
           "marks": [
@@ -229,8 +251,8 @@ $(function(){
           ]
         };
     
-      render(spec);
-      function render(spec) {
+      render1(spec);
+      function render1(spec) {
         view = new vega.View(vega.parse(spec), {
           renderer:  'canvas',
           container: '#bar',
@@ -240,22 +262,120 @@ $(function(){
       };
 
       const spex = {
-        "width": 200,
-        "height": 200,
-      
+          "width": 300,
+          "height": 300,
+        
+          "data": [
+            {
+              "name": "table",
+              "values": [
+                {"id": "H2020-EU.1.3.2.", "field": H2020EU132},
+                {"id": "H2020-EU.3.5.1.", "field": H2020EU351},
+                {"id": "H2020-EU.3.4.7.", "field": H2020EU347},
+                {"id": "H2020-EU.1.1.", "field": H2020EU11},
+                {"id": "H2020-EU.3.4.5.4.", "field": H2020EU3454},
+                {"id": "H2020-EU.3.5.6.", "field": H2020EU356},
+                {"id": "H2020-EU.4.", "field": H2020EU4},
+                {"id": "H2020-EU.2.1.4.", "field": H2020EU214},
+                {"id": "H2020-EU.3.6", "field": H2020EU36},
+                {"id": "H2020-EU.3.6.3.2.", "field": H2020EU3632},
+                {"id": "H2020-EU.3.4.5.6.", "field": H2020EU3456}
+              ] ,
+              "transform": [
+                {
+                  "type": "pie",
+                  "field": "field"
+                }
+              ]
+            }
+          ],
+
+          "signals": [
+            {
+              "name": "tooltip",
+              "value": {},
+              "on": [
+                {"events": "rect:mouseover", "update": "datum"},
+                {"events": "rect:mouseout",  "update": "{}"}
+              ]
+            }
+          ],
+
+          "scales": [
+              {
+                  "name": "color",
+                  "type": "ordinal",
+                  "domain": {"data": "table", "field": "id"},
+                  "range": {"scheme": "category10"}
+              }],
+
+          "legends": [
+              {
+                  "fill": "color",
+                  "title": "Programme",
+                  "encode": {
+                      "symbols": {
+                          "update": {
+                              "shape": {
+                                  "value": "circle"
+                              }
+                          }
+                      }
+                  }
+              }
+          ],
+
+          "marks": [
+            {
+              "type": "arc",
+              "from": {"data": "table"},
+              "encode": {
+                "enter": {
+                  "fill": {"scale": "color", "field": "id"},
+                  "x": {"signal": "width / 2"},
+                  "y": {"signal": "height / 2"},
+                  "tooltip": {"signal": "datum.field"}
+                },
+                "update": {
+                  "startAngle": {"field": "startAngle"},
+                  "endAngle": {"field": "endAngle"},
+                  "outerRadius": {"signal": "width / 2"}
+                }
+              }
+            }
+          ]
+        };
+    
+      render2(spex);
+      function render2(spec) {
+        view = new vega.View(vega.parse(spec), {
+          renderer:  'canvas',
+          container: '#pie',
+          hover:     true 
+        });
+        return view.runAsync();
+      };
+
+      var status_close = 0, status_signed = 0;
+      for(var i = 0; i < status.length; ++i){
+        if(status[i] == "CLOSED"){
+          status_close++;
+        }else if(status[i] == "SIGNED"){
+          status_signed++
+        }
+      };
+
+      const sper = {
+        "width": 300,
+        "height": 300,
+
         "data": [
           {
             "name": "table",
             "values": [
-              {"id": "H2020-EU.1.3.2.", "field": H2020EU132},
-              {"id": "H2020-EU.3.5.1.", "field": H2020EU351},
-              {"id": "H2020-EU.3.4.7.", "field": H2020EU347},
-              {"id": "H2020-EU.1.1.", "field": H2020EU11},
-              {"id": "H2020-EU.3.4.5.4.", "field": H2020EU3454},
-              {"id": "H2020-EU.3.5.6.", "field": H2020EU356},
-              {"id": "H2020-EU.4.", "field": H2020EU4},
-              {"id": "H2020-EU.2.1.4.", "field": H2020EU214}
-            ] ,
+              {"id": "CLOSED", "field": status_close},
+              {"id": "SIGNED", "field": status_signed}
+            ],
             "transform": [
               {
                 "type": "pie",
@@ -264,8 +384,27 @@ $(function(){
             ]
           }
         ],
-
+      
         "signals": [
+          {
+            "name": "startAngle", "value": 0
+          },
+          {
+            "name": "endAngle", "value": 6.29
+          },
+          {
+            "name": "padAngle", "value": 0
+          },
+          {
+            "name": "innerRadius", "value": 60
+          },
+          {
+            "name": "cornerRadius", "value": 0
+          
+          },
+          {
+            "name": "sort", "value": false
+          },
           {
             "name": "tooltip",
             "value": {},
@@ -281,13 +420,13 @@ $(function(){
                 "name": "color",
                 "type": "ordinal",
                 "domain": {"data": "table", "field": "id"},
-                "range": {"scheme": "category10"}
+                "range": {"scheme": "dark2"}
             }],
 
         "legends": [
             {
                 "fill": "color",
-                "title": "Programme",
+                "title": "Projektstatus",
                 "encode": {
                     "symbols": {
                         "update": {
@@ -299,7 +438,7 @@ $(function(){
                 }
             }
         ],
-
+      
         "marks": [
           {
             "type": "arc",
@@ -314,23 +453,26 @@ $(function(){
               "update": {
                 "startAngle": {"field": "startAngle"},
                 "endAngle": {"field": "endAngle"},
-                "outerRadius": {"signal": "width / 2"}
+                "padAngle": {"signal": "padAngle"},
+                "innerRadius": {"signal": "innerRadius"},
+                "outerRadius": {"signal": "width / 2"},
+                "cornerRadius": {"signal": "cornerRadius"}
               }
             }
           }
         ]
       };
-  
-    render2(spex);
-    function render2(spec) {
-      view = new vega.View(vega.parse(spec), {
-        renderer:  'canvas',
-        container: '#pie',
-        hover:     true 
-      });
-      return view.runAsync();
-    }
-    }
+      
+      render3(sper);
+      function render3(spec) {
+        view = new vega.View(vega.parse(spec), {
+          renderer:  'canvas',
+          container: '#status',
+          hover:     true 
+        });
+        return view.runAsync();
+      };
+    };
 
     //Display the Knowledgegraph
     function visualization(data){ 
