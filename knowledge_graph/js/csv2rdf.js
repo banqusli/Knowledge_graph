@@ -105,7 +105,14 @@ $(function(){
       var baseUrl="http://localhost:8080/knowledge_graph/knowledge_graph/projects.html";
       $rdf.parse(data, store, baseUrl, 'application/rdf+xml');
       read_graph(store);
+      to_json_ld(baseUrl, store);
     };
+
+    //convert to json-ld
+    async function to_json_ld(baseUrl, store){
+      var nquads = $rdf.serialize(null, store, baseUrl, 'application/n-quads');
+      var json = await jsonld.fromRDF(nquads, {format: 'application/n-quads'});    
+    }
 
     //extract the Data from the graph
     function read_graph(store){

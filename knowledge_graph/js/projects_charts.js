@@ -14,7 +14,6 @@ $(function(){
 
     $.ajax({
       type: 'GET',
-      //to get the whole dataset change the url value to: `./js/cordis_pro_copy.csv`
       url: `./csv/cordis_projects.csv`,
       success: function(data){
         csvJSON(data);
@@ -59,11 +58,11 @@ $(function(){
       xmlns:dcat="http://www.w3.org/ns/dcat#">`;
       for(let i = 1; i < Data.length; i++) {
           let details = Data[i].split(';');
-          rdf += `<dcatapop:project rdf:about="http://203.254.173.81:8080/ontologies/ConnectedFarmServiceOntology.owl#project">`;
             if(details[0].length > 7){
               delete details[i];
             }else{
               for(let j = 0; j < headings.length; j++) {
+                rdf += `<dcatapop:project rdf:about="http://203.254.173.81:8080/ontologies/ConnectedFarmServiceOntology.owl#${details[1]}">`;
                 if(headings[j] == "rcn"){
                   rdf += `<owl:${headings[j]}>${details[j]}</owl:${headings[j]}>`;
                 }else if(headings[j] == "id" ){
@@ -85,9 +84,9 @@ $(function(){
                 }else{
                   rdf += `<cfso:${headings[j]}><cfso:${headings[j]} rdf:about="http://203.254.173.81:8080/ontologies/ConnectedFarmServiceOntology.owl#type"/></cfso:${headings[j]}>`;
                 }
+                rdf += "</dcatapop:project>"
               }
             } 
-          rdf += "</dcatapop:project>"
         }
       rdf += "</rdf:RDF>";
 
@@ -100,7 +99,14 @@ $(function(){
       var baseUrl="http://localhost:8080/knowledge_graph/knowledge_graph/projects.html";
       $rdf.parse(data, store, baseUrl, 'application/rdf+xml');
       read_graph(store);
+      to_json_ld(baseUrl, store);
     };
+
+    //convert to json-ld
+    async function to_json_ld(baseUrl, store){
+      var nquads = $rdf.serialize(null, store, baseUrl, 'application/n-quads');
+      var json = await jsonld.fromRDF(nquads, {format: 'application/n-quads'});      
+    }
 
     //extract the Data from the graph
     function read_graph(store){
